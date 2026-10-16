@@ -1,11 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Totally Serious Project</title>
-  <meta http-equiv="refresh" content="0; url=https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLASSIFIED TERMINAL</title>
+
+<style>
+:root{
+    --green:#00ff66;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:black;
+    color:var(--green);
+    font-family:"Courier New", monospace;
+    overflow:hidden;
+    height:100vh;
+}
+
+/* CRT effect */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+        repeating-linear-gradient(
+            transparent 0px,
+            rgba(255,255,255,0.03) 1px,
+            transparent 2px
+        );
+    z-index:2;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,255,100,.02);
+    animation:flicker .15s infinite;
+    pointer-events:none;
+}
+
+.container{
+    width:min(900px,90%);
+    margin:auto;
+    padding-top:8vh;
+}
+
+/* GLITCH TITLE */
+.glitch{
+    font-size:4rem;
+    font-weight:bold;
+    position:relative;
+    text-transform:uppercase;
+    animation:glitch-skew 2s infinite linear alternate-reverse;
+}
+
+.glitch::before,
+.glitch::after{
+    content:attr(data-text);
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+}
+
+.glitch::before{
+    color:#ff0040;
+    animation:glitch1 .4s infinite;
+}
+
+.glitch::after{
+    color:#00ffff;
+    animation:glitch2 .4s infinite;
+}
+
+.terminal{
+    margin-top:30px;
+    border:2px solid var(--green);
+    padding:20px;
+    height:280px;
+    overflow:hidden;
+    box-shadow:
+        0 0 15px var(--green),
+        inset 0 0 15px var(--green);
+}
+
+.line{
+    margin:8px 0;
+    opacity:0;
+    animation:appear .2s forwards;
+}
+
+.cursor{
+    display:inline-block;
+    width:10px;
+    height:18px;
+    background:var(--green);
+    animation:blink 1s infinite;
+}
+
+.controls{
+    margin-top:25px;
+    display:flex;
+    gap:15px;
+    align-items:center;
+}
+
+button{
+    background:black;
+    color:var(--green);
+    border:2px solid var(--green);
+    padding:10px 20px;
+    font-family:inherit;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:var(--green);
+    color:black;
+    box-shadow:0 0 20px var(--green);
+}
+
+.countdown{
+    font-size:1.25rem;
+}
+
+/* Loading bar */
+.progress{
+    margin-top:20px;
+    border:1px solid var(--green);
+    height:20px;
+}
+
+.bar{
+    height:100%;
+    width:0%;
+    background:var(--green);
+    animation:load 8s linear forwards;
+}
+
+@keyframes load{
+    from{width:0}
+    to{width:100%}
+}
+
+@keyframes blink{
+    50%{opacity:0}
+}
+
+@keyframes appear{
+    to{opacity:1}
+}
+
+@keyframes flicker{
+    50%{opacity:.95}
+}
+
+@keyframes glitch1{
+    0%{transform:translate(0)}
+    20%{transform:translate(-3px,2px)}
+    40%{transform:translate(-5px,-2px)}
+    60%{transform:translate(3px,1px)}
+    80%{transform:translate(2px,-1px)}
+    100%{transform:translate(0)}
+}
+
+@keyframes glitch2{
+    0%{transform:translate(0)}
+    20%{transform:translate(4px,-2px)}
+    40%{transform:translate(3px,2px)}
+    60%{transform:translate(-3px,1px)}
+    80%{transform:translate(-2px,-1px)}
+    100%{transform:translate(0)}
+}
+
+@keyframes glitch-skew{
+    0%{transform:skew(0deg)}
+    20%{transform:skew(2deg)}
+    40%{transform:skew(-2deg)}
+    60%{transform:skew(1deg)}
+    80%{transform:skew(-1deg)}
+    100%{transform:skew(0deg)}
+}
+</style>
 </head>
+
 <body>
-  <p>If you are not redirected, <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">click here</a>.</p>
+
+<div class="container">
+
+    <h1 class="glitch" data-text="CLASSIFIED ACCESS">
+        CLASSIFIED ACCESS
+    </h1>
+
+    <div class="terminal" id="terminal">
+        <div id="output"></div>
+        <span class="cursor"></span>
+    </div>
+
+    <div class="progress">
+        <div class="bar"></div>
+    </div>
+
+    <div class="controls">
+        <button onclick="skip()">
+            SKIP ▶
+        </button>
+
+        <div class="countdown">
+            Redirecting in <span id="count">8</span>s
+        </div>
+    </div>
+
+</div>
+
+<script>
+const messages = [
+    "> INITIALIZING SECURE TERMINAL...",
+    "> BYPASSING FIREWALL...",
+    "> CONNECTING TO MAINFRAME...",
+    "> DECRYPTING LAUNCH CODES...",
+    "> ACCESS LEVEL: OMEGA",
+    "> WARNING: UNAUTHORIZED VIEWER DETECTED",
+    "> PREPARING PAYLOAD...",
+    "> EXECUTING FINAL SEQUENCE..."
+];
+
+const output = document.getElementById("output");
+
+messages.forEach((msg, index)=>{
+    setTimeout(()=>{
+        const line = document.createElement("div");
+        line.className="line";
+        line.textContent=msg;
+        output.appendChild(line);
+    }, index * 800);
+});
+
+const target =
+"https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+let time = 8;
+const countdown = document.getElementById("count");
+
+const timer = setInterval(()=>{
+    time--;
+    countdown.textContent = time;
+
+    if(time <= 0){
+        redirect();
+    }
+},1000);
+
+function redirect(){
+    clearInterval(timer);
+
+    document.body.style.animation =
+        "glitch-skew .05s infinite";
+
+    setTimeout(()=>{
+        window.location.href = target;
+    },600);
+}
+
+function skip(){
+    redirect();
+}
+</script>
+
 </body>
 </html>
